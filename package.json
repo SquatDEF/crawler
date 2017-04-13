@@ -17,8 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+git@github.com:SquatDEF/crawler.git
-"
+    "url": "git+ssh://git@github.com:SquatDEF/crawler.git"
   },
   "author": "SquatDEF",
   "license": "ISC",
