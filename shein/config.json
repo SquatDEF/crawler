@@ -1,0 +1,7 @@
+{
+    "maxDiskCacheSize": 102400,
+
+    "diskCacheEnabled": true,
+
+    "diskCachePath": "E:/Project/CrawlerTool/cache/"
+}
