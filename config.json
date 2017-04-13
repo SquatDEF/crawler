@@ -3,5 +3,5 @@
 
     "diskCacheEnabled": true,
 
-    "diskCachePath": "E:/Project/crawler/cache/"
+    "diskCachePath": "./cache/"
 }
