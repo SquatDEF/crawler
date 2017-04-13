@@ -54,7 +54,7 @@ function GetNav() {
 }
 
 /**
- * 获取指定所有分页的url
+ * 获取所有分页的url
  * phantomjs main.js 2 
  */
 function GetAllUrl() {
@@ -63,7 +63,8 @@ function GetAllUrl() {
     var fileList = fs.list('./file/');
     var txtList = function() {
         var tmpFile = [];
-        for(var i = 0; i < fileList.length - 1; i++) {
+        var tmpLength = fileList.length
+        for(var i = 0; i < tmpLength; i++) {
             if (fileList[i].indexOf('.txt') != -1) {
                 tmpFile.push(fileList[i]);
             }
@@ -117,7 +118,8 @@ function GetAllUrl() {
     var fileList = fs.list(folderPath);
     var txtList = function() {
         var tmpFile = [];
-        for(var i = 0; i < fileList.length - 1; i++) {
+        var tmpLength = fileList.length;
+        for(var i = 0; i < tmpLength; i++) {
             if (fileList[i].indexOf('.txt') != -1) {
                 tmpFile.push(fileList[i]);
             }
