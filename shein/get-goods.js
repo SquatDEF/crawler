@@ -19,7 +19,12 @@ const productDataFile = './file/url_' + folderNum + '/product/' + fileName;
 const errorFile = './file/url_' + folderNum + '/product/' + fileName + '.error.txt';
 
 // 读取文件
-var readData = JSON.parse(fs.open(readFile, 'r').read());
+if (fs.exists(readFile)) {
+    var readData = JSON.parse(fs.open(readFile, 'r').read());
+}else {
+    console.log('this path inexisttence.');
+    phantom.exit(0);
+}
 
 // 运行
 Start = function(urlData, FON, FIN) {
