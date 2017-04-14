@@ -3,5 +3,5 @@
 
     "diskCacheEnabled": true,
 
-    "diskCachePath": "./cache/"
+    "diskCachePath": "../cache/"
 }
