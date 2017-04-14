@@ -37,6 +37,9 @@ GetUrlsToTxt = function(Urls, callbackPerUrl, callbackFinal) {
         var url;
         if (Urls.length > 0) {
             url = Urls.shift();
+            if (url.URL.indexOf('?') != -1) {
+                url.URL = url.URL.split('?')[0];
+            }
             page = webpage.create();
             // page option
             page.settings = {

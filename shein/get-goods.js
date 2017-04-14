@@ -42,6 +42,9 @@ Start = function(urlData, FON, FIN) {
     run = function() {
         if (urlData.length > 0) {
             var url = urlData.shift();
+            if (url.URL.indexOf('?') != -1) {
+                url.URL = url.URL.split('?')[0];
+            }
             page = webpage.create();
             // page option
             page.settings = {
