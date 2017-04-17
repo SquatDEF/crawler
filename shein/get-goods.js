@@ -34,7 +34,7 @@ Start = function(urlData, FON, FIN) {
     webpage = require('webpage');
     index = 0;
     next = function(status, url, callbackData) {
-        page.close();
+        status && page.close();
         index++;
         _export(status, url, callbackData);
         run();
@@ -42,8 +42,12 @@ Start = function(urlData, FON, FIN) {
     run = function() {
         if (urlData.length > 0) {
             var url = urlData.shift();
-            if (url.URL.indexOf('?') != -1) {
-                url.URL = url.URL.split('?')[0];
+            if (url.indexOf('.php') != -1 || url.indexOf('.js') != -1 || url.indexOf('.asp') != -1) {
+                errorURL.URL.push(url);
+                next(false, url, 'it is not a valid URL.');
+                return false;
+            }else if (url.indexOf('?') != -1) {
+                urlL = url.split('?')[0];
             }
             page = webpage.create();
             // page option
@@ -105,9 +109,8 @@ Start = function(urlData, FON, FIN) {
             });
             // Time out
             page.onResourceTimeout = function(request) {
-                console.log('Time out, perform next!');
                 errorURL.URL.push(request.url);
-                next(status, request.url, 'can\'t connection this path.');
+                next(status, request.url, 'Time out.');
             };
         } else {
             end();
@@ -116,14 +119,19 @@ Start = function(urlData, FON, FIN) {
     _export = function(status, url, callbackData) {
         if (status !== 'success') {
             console.log('Unable to connection: ' + url);
+            console.log('error: ' + callbackData);
         } else {
             console.log('Get product quantity: ' + callbackData.goodsList.length);
         }
     };
     end = function() {
+        console.log('get goods quantity:', AllGoods.goodsList.length);
+        console.log('error quantity:', errorURL.URL.length);
         fs.write(productDataFile, JSON.stringify(AllGoods), 'w');
         if (errorURL.URL != 0) {
             fs.write(errorFile, JSON.stringify(errorURL), 'w');
+        }else if(fs.exists(errorFile)) {
+            fs.remove(errorFile);
         }
         console.log('End!');
         phantom.exit();
