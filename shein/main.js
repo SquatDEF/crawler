@@ -7,11 +7,9 @@ const spawn = require('child_process').spawn;
 const fs = require('fs');
 const system = require('system');
 
-// 爬虫四个主要方法
-var GetNav, GetAllUrl, GetGoods, PostData;
-
 // 读取传入第一位参数，判断要执行什么方法
 const functionNum = system.args[1];
+console.log(functionNum);
 switch(functionNum) {   
     case '1':
         console.log('Get Nav.');
@@ -180,15 +178,17 @@ function DataFilter() {
     child.on('exit', function(code) {
         console.log('EXIT:', code);
         phantom.exit(0);
-});
-
-
+    });
+}
  /**
   * post 指定URL文件夹内指定的product文件
-  * phantomjs main.js 4 <folder number> <product file number>
+  * phantomjs main.js 5 <post data quantity>
   */
 function PostData() {
-    var child = spawn('node', ['post-data.js', folderNum, fileNum]);
+    // 读取传入参数
+    const postQuantity = system.args[2];
+    console.log(postQuantity);
+    var child = spawn('node', ['post-data.js', postQuantity]);
     child.stdout.on('data', function(data) {
         var outShow = JSON.stringify(data);
         outShow = outShow.replace(/\\r\\n/g, '');
