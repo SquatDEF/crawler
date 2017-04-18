@@ -8,6 +8,7 @@
     "phantomjs": "^2.1.7",
     "phantomjs-prebuilt": "^2.1.14",
     "jquery": "^3.2.1",
+    "mysql": "^2.13.0",
     "request": "^2.81.0",
     "superagent": "^3.5.0"
   },
