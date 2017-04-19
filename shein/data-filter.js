@@ -8,7 +8,7 @@
 const fs = require('fs');
 const request = require('request');
 const mysql = require('mysql');
-const mysqlConfig = require('./mysql-config.js');
+const config = require('./config.js');
 const out = process.stdout;
 
 // post file
@@ -23,7 +23,7 @@ if (!(postFile && postFolder)) {
     fs.exists(filePath, function(ex) {
         if (ex) {
             var readData = JSON.parse(fs.readFileSync(filePath).toString());
-            const connection = mysql.createConnection(mysqlConfig.config);
+            const connection = mysql.createConnection(config.mysqlConfig);
             connection.connect();
             var index = 0;
             var complete = 0;
