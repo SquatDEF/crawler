@@ -1,84 +1,62 @@
+/**
+ * 使用方法
+ * 把文本数据存入数据库
+ * node data-filter.js 0 1
+ */
+
 // 依赖
 const fs = require('fs');
-const system = require('system');
+const request = require('request');
+const mysql = require('mysql');
+const mysqlConfig = require('./mysql-config.js');
+const out = process.stdout;
+
+// post file
+var postFolder = process.argv[2];
+var postFile = process.argv[3];
 
 // path
-const filePath = './file/';
-const allDataWritePath = './file/Data/all-data.txt';
-
-// get all valid file path
-var validFileList = function() {
-    var fileList = fs.list(filePath);
-    var tmpArr = [];
-    var tmpTxtFileArr = [];
-    for(var i = 0; i < fileList.length; i++) {
-        if (fileList[i].indexOf('url') != -1) {
-            tmpArr.push(fileList[i]);
-        }
-    }
-    for(var j = 0; j < tmpArr.length; j++) {
-        var tmpPath = filePath + tmpArr[j] + '/product/';
-        if (fs.exists(tmpPath)) {
-            var txtFileList = fs.list(tmpPath);
-            for(var k = 0; k < txtFileList.length; k++) {
-                if (txtFileList[k].indexOf('.txt') != -1 && txtFileList[k].indexOf('.error.txt') == -1) {
-                    tmpTxtFileArr.push(tmpPath + txtFileList[k]);
+if (!(postFile && postFolder)) {
+    console.log('need foler number and file number');
+} else {
+    var filePath = './file/url_' + postFolder + '/product/' + postFile + '.txt';
+    fs.exists(filePath, function(ex) {
+        if (ex) {
+            var readData = JSON.parse(fs.readFileSync(filePath).toString());
+            const connection = mysql.createConnection(mysqlConfig.config);
+            connection.connect();
+            var index = 0;
+            var complete = 0;
+            var duplicate = 0;
+            const _d = readData.goodsList;
+            const _dL = _d.length;
+            out.write('quantity: ' + _dL);
+            function PostDataToLocalhost() {
+                if (index < _dL) {
+                    var sql = 'insert into goods_data(id, sku, title, attr, price, img, source) value(0, ?, ?, ?, ?, ?, ?)';
+                    var sqlParam = [_d[index].Sku, _d[index].Title, (_d[index].Attr || 'nothing'), _d[index].Price, _d[index].ImgURL, _d[index].SourceURL];
+                    connection.query(sql, sqlParam, function(err, result) {
+                        out.clearLine(1);
+                        out.cursorTo(0, 1);
+                        index++;
+                        if (err) {
+                            duplicate++;
+                            out.write('Timer: ' + index + '\nComplete: ' + complete + '\nDuplicate: ' + duplicate + '\nError Message: ' + err.message);
+                        }else {
+                            complete++;
+                            out.write('Timer: ' + index + '\nComplete: ' + complete + '\nDuplicate: ' + duplicate + '\nInsert ID:' + result.insertId);
+                        }
+                        setTimeout(PostDataToLocalhost, 10);
+                    });
+                }else {
+                    connection.end();
                 }
             }
+            PostDataToLocalhost();
+        }else {
+            console.log('this path inexisttence.');
         }
-    }
-    return tmpTxtFileArr;
-}();
-
-// get All data to the file
-var validFileListLength = validFileList.length;
-var allData = [];
-for(var v = 0; v < validFileListLength; v++) {
-    var tmpReadData = JSON.parse(fs.open(validFileList[v], 'r').read());
-    if (tmpReadData.goodsList.length > 0) {
-        allData = allData.concat(tmpReadData.goodsList);
-    }
+    });
 }
-var allDataLength = allData.length;
-// Filtering data
-function validAllData(array) {
-    var filter, next, end, tmpArray = [];
-    filter = function() {
-        var data = array.shift();
-        var notExisted = true;
-        for(var i = 0; i < array.length; i++) {
-            if (data.Sku == array[i].Sku) {
-                notExisted = false;
-                break;
-            }
-        }
-        if (notExisted) {
-            tmpArray.push(data);
-        }
-        next();
-    };
-    next = function() {
-        if (array.length > 0) {
-            filter();
-        }else {
-            end();
-        }
-    };
-    end = function() {
-        // write the file
-        console.log('allData length:', allDataLength);
-        console.log('validAllData length:', tmpArray.length);
-        console.log('Invalid quantity:', allDataLength - tmpArray.length);
-        tmpArray = {goodsList: tmpArray};
-        fs.write(allDataWritePath, JSON.stringify(tmpArray), 'w');
-        if (fs.exists(allDataWritePath)) {
-            console.log('get all data success.');
-        }else {
-            console.log('defeated.');
-        }
-        phantom.exit(0);
-    };
-    filter();
-};
-validAllData(allData);
+
 
