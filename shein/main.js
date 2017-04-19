@@ -23,14 +23,6 @@ switch(functionNum) {
         console.log('Get Goods.');
         GetGoods();
         break;
-    // case '4':
-    //     console.log('Data Filter.');
-    //     DataFilter();
-    //     break;
-    // case '5':
-    //     console.log('Post Data.');
-    //     PostData();
-    //     break;
 }
 
 /**
@@ -158,49 +150,3 @@ function GetAllUrl() {
     }
     NextGetGoods();
 }
-
-/**
- * 数据过滤
- * phantomjs main.js 4
- */
-// function DataFilter() {
-//     var child = spawn('phantomjs', ['data-filter.js']);
-//     child.stdout.on('data', function(data) {
-//         var outShow = JSON.stringify(data);
-//         outShow = outShow.replace(/\\r\\n/g, '');
-//         console.log('OUT:', outShow);
-//     });
-//     child.stderr.on('data', function(data) {
-//         var errShow = JSON.stringify(data);
-//         errShow = errShow.replace(/\\r\\n/g, '');
-//         console.log('ERR:', errShow);
-//     });
-//     child.on('exit', function(code) {
-//         console.log('EXIT:', code);
-//         phantom.exit(0);
-//     });
-// }
- /**
-  * post 指定URL文件夹内指定的product文件
-  * phantomjs main.js 5 <post data quantity>
-  */
-// function PostData() {
-//     // 读取传入参数
-//     const postQuantity = system.args[2];
-//     console.log(postQuantity);
-//     var child = spawn('node', ['post-data.js', postQuantity]);
-//     child.stdout.on('data', function(data) {
-//         var outShow = JSON.stringify(data);
-//         outShow = outShow.replace(/\\r\\n/g, '');
-//         console.log('OUT:', outShow);
-//     });
-//     child.stderr.on('data', function(data) {
-//         var errShow = JSON.stringify(data);
-//         errShow = errShow.replace(/\\r\\n/g, '');
-//         console.log('ERR:', errShow);
-//     });
-//     child.on('exit', function(code) {
-//         console.log('EXIT:', code);
-//         phantom.exit(0);
-//     });
-// }

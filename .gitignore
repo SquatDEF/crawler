@@ -4,3 +4,4 @@ file/
 *.sql
 config.js
 test.*
+/ebay/
